@@ -13,11 +13,19 @@ enum UserAction
     None
 }
 
+enum GameState
+{
+    Running,
+
+    Paused,
+    GameOver
+}
+
 class Gameloop
 {
     private static Gameloop? instance;
 
-    private const short targetFrameRate = 1;
+    private const short targetFrameRate = 5;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
@@ -26,8 +34,7 @@ class Gameloop
 
     private bool isRunning = true;
 
-    private Block? block = new Block();
-    private Board? board = new Board();
+    private BoardController boardController = new BoardController();
 
 
     private Gameloop() { }
@@ -74,6 +81,11 @@ class Gameloop
     {
         timeElapsedForDrop += elapsedTime;
 
+        if (boardController.block == null)
+        {
+            boardController.CreateBlock();
+        }
+
         switch (userAction)
         {
             case UserAction.Quit:
@@ -83,10 +95,20 @@ class Gameloop
                 Console.WriteLine("Game Paused");
                 Console.ReadKey();
                 break;
-            case UserAction.None:
-                break;
             case UserAction.Rotate:
-                block?.Rotate();
+                boardController.RotateBlock();
+                break;
+            case UserAction.Drop:
+                blockDropRate = 200;
+                break;
+            case UserAction.MoveLeft:
+                boardController.MoveBlock(0, -1);
+                break;
+            case UserAction.MoveRight:
+                boardController.MoveBlock(0, 1);
+                break;
+            case UserAction.None:
+                blockDropRate = 1000;
                 break;
             default:
                 break;
@@ -94,8 +116,8 @@ class Gameloop
 
         if (timeElapsedForDrop.TotalMilliseconds >= blockDropRate)
         {
-            //block?.MoveDown();
-            Console.WriteLine("Block moved down");
+            boardController.MoveBlock(1, 0); //move block down
+
             timeElapsedForDrop = TimeSpan.Zero;
         }
     }
@@ -108,9 +130,7 @@ class Gameloop
         {
             Console.Clear();
             Console.SetCursorPosition(0, 0);
-            board?.Render();
-            Console.SetCursorPosition(0, 0);
-            block?.Render();
+            boardController.board.Render();
             timeElapsedForRender = TimeSpan.Zero;
         }
 

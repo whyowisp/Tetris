@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 namespace TetrisGame;
 
 public class Block
@@ -16,6 +18,8 @@ public class Block
     private string[] possibleColors = new string[] { "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
     public char[][] Shape { get; private set; }
     public string Color { get; private set; }
+    public int PosX { get; set; }
+    public int PosY { get; set; }
     public Block()
     {
         Random random = new Random();
@@ -37,7 +41,6 @@ public class Block
                 newShape[i][j] = Shape[rows - j - 1][i];
             }
         }
-
         Shape = newShape;
     }
 
@@ -49,6 +52,7 @@ public class Block
         {
             for (int j = 0; j < Shape[i].Length; j++)
             {
+                Console.SetCursorPosition(PosY + j, PosX + i);
                 Console.Write(Shape[i][j]);
             }
             Console.WriteLine();
