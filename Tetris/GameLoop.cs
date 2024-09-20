@@ -17,7 +17,7 @@ class Gameloop
 {
     private static Gameloop? instance;
 
-    private const short targetFrameRate = 5;
+    private const short targetFrameRate = 1;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
@@ -27,6 +27,7 @@ class Gameloop
     private bool isRunning = true;
 
     private Block? block = new Block();
+    private Board? board = new Board();
 
 
     private Gameloop() { }
@@ -106,7 +107,10 @@ class Gameloop
         if (timeElapsedForRender.TotalMilliseconds >= frameInterval)
         {
             Console.Clear();
-            block?.Print();
+            Console.SetCursorPosition(0, 0);
+            board?.Render();
+            Console.SetCursorPosition(0, 0);
+            block?.Render();
             timeElapsedForRender = TimeSpan.Zero;
         }
 

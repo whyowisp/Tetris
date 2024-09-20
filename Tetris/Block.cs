@@ -42,7 +42,7 @@ public class Block
     }
 
     //propably Block should not print itself but instead of Render method in GameLoop
-    public void Print()
+    public void Render()
     {
         Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Color);
         for (int i = 0; i < Shape.Length; i++)
