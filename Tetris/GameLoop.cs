@@ -83,7 +83,7 @@ class Gameloop
 
         if (boardController.block == null)
         {
-            boardController.CreateBlock(10, 0);
+            boardController.CreateBlock(20, 5);
         }
 
         switch (userAction)
@@ -116,7 +116,7 @@ class Gameloop
 
         if (timeElapsedForDrop.TotalMilliseconds >= blockDropRate)
         {
-            boardController.MoveBlock(0, 1);
+            boardController.MoveBlock(0, 0);
 
             timeElapsedForDrop = TimeSpan.Zero;
         }

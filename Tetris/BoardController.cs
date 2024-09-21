@@ -19,6 +19,8 @@ class BoardController
 
     public void RotateBlock()
     {
+        block?.Rotate();
+
         bool collision = CheckCollision();
         if (collision)
         {
@@ -26,7 +28,6 @@ class BoardController
             block = null;
 
         }
-        block?.Rotate();
     }
 
     public void MoveBlock(int x, int y)
@@ -57,8 +58,11 @@ class BoardController
                 {
                     if (board.BoardGrid[block.PosY + i][block.PosX + j] == '█')
                     {
+                        Console.WriteLine("block.PosY: {0}, block.PosX: {1}", block.PosY, block.PosX);
+                        Console.ReadKey();
                         return true;
                     }
+
                 }
             }
         }
