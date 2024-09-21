@@ -23,6 +23,11 @@ class BoardController
     // Just kidding. The rotation against the wall causes piece to merge into it.
     public void RotatePiece()
     {
+        if (Piece == null)
+        {
+            return;
+        }
+
         bool collision = CheckCollision(0, 0);
 
         if (collision)
@@ -75,7 +80,7 @@ class BoardController
             {
                 if (Piece!.PieceLayout[i][j] == '█')
                 {
-                    if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j] == '█')
+                    if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j].Symbol == '█')
                     {
                         return true;
                     }

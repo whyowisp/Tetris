@@ -1,25 +1,4 @@
-using System.Data;
-
 namespace TetrisGame;
-
-enum UserAction
-{
-    MoveLeft,
-    MoveRight,
-    Rotate,
-    Drop,
-    Pause,
-    Quit,
-    None
-}
-
-enum GameState
-{
-    Running,
-
-    Paused,
-    GameOver
-}
 
 class Gameloop
 {

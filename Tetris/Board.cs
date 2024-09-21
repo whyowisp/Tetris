@@ -1,17 +1,28 @@
 namespace TetrisGame;
 
+struct EntryData
+{
+    public char Symbol { get; private set; }
+    public Color Color { get; }
+    public EntryData(Color color, char symbol)
+    {
+        Color = color;
+        Symbol = symbol;
+    }
+}
+
 class Board
 {
     private const int boardHeight = 10; //20
     private const int boardWidth = 25;
-    private const int marginRight = 25; //Margin is used to prevent out of bounds exception at the right edge of the board
-    public char[][] BoardLayout { get; private set; }
+    private const int marginRight = 5; //Margin is used to prevent out of bounds exception at the right edge of the board
+    public EntryData[][] BoardLayout { get; private set; }
     public Board()
     {
-        BoardLayout = new char[boardHeight][];
+        BoardLayout = new EntryData[boardHeight][];
         for (int i = 0; i < BoardLayout.Length; i++)
         {
-            BoardLayout[i] = new char[boardWidth + marginRight];
+            BoardLayout[i] = new EntryData[boardWidth + marginRight];
         }
         InitializeBoardEdges();
     }
@@ -21,15 +32,15 @@ class Board
         return boardWidth;
     }
 
-    public void MergeWithBoard(Piece block)
+    public void MergeWithBoard(Piece piece)
     {
-        for (int i = 0; i < block.PieceLayout.Length; i++)
+        for (int i = 0; i < piece.PieceLayout.Length; i++)
         {
-            for (int j = 0; j < block.PieceLayout[i].Length; j++)
+            for (int j = 0; j < piece.PieceLayout[i].Length; j++)
             {
-                if (block.PieceLayout[i][j] == '█')
+                if (piece.PieceLayout[i][j] == '█')
                 {
-                    BoardLayout[block.PosY + i][block.PosX + j] = '█';
+                    BoardLayout[piece.PosY + i][piece.PosX + j] = new EntryData((Color)Enum.Parse(typeof(Color), piece.Color), piece.PieceLayout[i][j]);
                 }
             }
         }
@@ -40,7 +51,8 @@ class Board
         {
             for (int j = 0; j < BoardLayout[i].Length; j++)
             {
-                Console.Write(BoardLayout[i][j]);
+                Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), BoardLayout[i][j].Color.ToString());
+                Console.Write(BoardLayout[i][j].Symbol);
             }
             Console.WriteLine();
         }
@@ -55,14 +67,12 @@ class Board
                 // if statement: left edge || right edge || bottom edge, excluding right margin)
                 if (j == 0 || j == boardWidth - 1 || (i == boardHeight - 1 && j < boardWidth))
                 {
-                    BoardLayout[i][j] = '█';
+                    BoardLayout[i][j] = new EntryData(Color.White, '█');
                 }
                 else
                 {
-                    BoardLayout[i][j] = ' ';
+                    BoardLayout[i][j] = new EntryData(Color.White, ' ');
                 }
-
-
             }
         }
     }

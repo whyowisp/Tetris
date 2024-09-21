@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
 namespace TetrisGame;
@@ -15,16 +16,16 @@ public class Piece
         new char[][] { new char[] { '█', '█' }, new char[] { '█', '█' } }
 
     };
-    private string[] possibleColors = new string[] { "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
+
+    private Random random = new Random();
     public char[][] PieceLayout { get; private set; }
     public string Color { get; private set; }
     public int PosX { get; private set; }
     public int PosY { get; private set; }
     public Piece(int x, int y)
     {
-        Random random = new Random();
         PieceLayout = possibleShapes[random.Next(possibleShapes.Length)];
-        Color = possibleColors[random.Next(possibleColors.Length)];
+        Color = GetRandomColor().ToString();
         PosX = x;
         PosY = y;
     }
@@ -65,5 +66,15 @@ public class Piece
             Console.WriteLine();
         }
         Console.ResetColor();
+    }
+
+    private Color GetRandomColor()
+    {
+        Color color = TetrisGame.Color.White;
+        while (color == TetrisGame.Color.White)
+        {
+            color = (Color)Enum.Parse(typeof(Color), Enum.GetNames(typeof(Color))[random.Next(Enum.GetNames(typeof(Color)).Length)]);
+        }
+        return color;
     }
 }
