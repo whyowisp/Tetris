@@ -16,21 +16,23 @@ public class Block
 
     };
     private string[] possibleColors = new string[] { "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
-    public char[][] Shape { get; private set; }
+    public char[][] PieceLayout { get; private set; }
     public string Color { get; private set; }
-    public int PosX { get; set; }
-    public int PosY { get; set; }
-    public Block()
+    public int PosX { get; private set; }
+    public int PosY { get; private set; }
+    public Block(int x, int y)
     {
         Random random = new Random();
-        Shape = possibleShapes[random.Next(possibleShapes.Length)];
+        PieceLayout = possibleShapes[random.Next(possibleShapes.Length)];
         Color = possibleColors[random.Next(possibleColors.Length)];
+        PosX = x;
+        PosY = y;
     }
 
     public void Rotate()
     {
-        int rows = Shape.Length;
-        int cols = Shape[0].Length;
+        int rows = PieceLayout.Length;
+        int cols = PieceLayout[0].Length;
         char[][] newShape = new char[cols][];
 
         for (int i = 0; i < cols; i++)
@@ -38,25 +40,30 @@ public class Block
             newShape[i] = new char[rows];
             for (int j = 0; j < rows; j++)
             {
-                newShape[i][j] = Shape[rows - j - 1][i];
+                newShape[i][j] = PieceLayout[rows - j - 1][i];
             }
         }
-        Shape = newShape;
+        PieceLayout = newShape;
     }
 
-    //propably Block should not print itself but instead of Render method in GameLoop
+    public void ChangePosition(int x, int y)
+    {
+        PosX += x;
+        PosY += y;
+    }
+
     public void Render()
     {
         Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Color);
-        for (int i = 0; i < Shape.Length; i++)
+        for (int i = 0; i < PieceLayout.Length; i++)
         {
-            for (int j = 0; j < Shape[i].Length; j++)
+            for (int j = 0; j < PieceLayout[i].Length; j++)
             {
-                Console.SetCursorPosition(PosY + j, PosX + i);
-                Console.Write(Shape[i][j]);
+                Console.SetCursorPosition(PosX + j, PosY + i);
+                Console.Write(PieceLayout[i][j]);
             }
             Console.WriteLine();
         }
-        Console.ForegroundColor = ConsoleColor.White;
+        Console.ResetColor();
     }
 }

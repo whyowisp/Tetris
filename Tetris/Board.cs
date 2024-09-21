@@ -13,13 +13,13 @@ class Board
         ResetBoardEdges();
     }
 
-    public void StampBlock(Block block)
+    public void MergeWithBoard(Block block)
     {
-        for (int i = 0; i < block.Shape.Length; i++)
+        for (int i = 0; i < block.PieceLayout.Length; i++)
         {
-            for (int j = 0; j < block.Shape[i].Length; j++)
+            for (int j = 0; j < block.PieceLayout[i].Length; j++)
             {
-                if (block.Shape[i][j] == '█')
+                if (block.PieceLayout[i][j] == '█')
                 {
                     BoardGrid[block.PosX + i][block.PosY + j] = '█';
                 }

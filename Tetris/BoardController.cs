@@ -9,11 +9,11 @@ class BoardController
         board = new Board();
     }
 
-    public void CreateBlock()
+    public void CreateBlock(int x, int y)
     {
         if (block == null)
         {
-            block = new Block();
+            block = new Block(x, y);
         }
     }
 
@@ -22,7 +22,7 @@ class BoardController
         bool collision = CheckCollision();
         if (collision)
         {
-            board.StampBlock(block);
+            board.MergeWithBoard(block);
             block = null;
 
         }
@@ -31,25 +31,29 @@ class BoardController
 
     public void MoveBlock(int x, int y)
     {
-        block.PosY += y;
-        block.PosX += x;
+        block?.ChangePosition(x, y);
 
         bool collision = CheckCollision();
         if (collision)
         {
-            board.StampBlock(block);
+            board.MergeWithBoard(block);
             block = null;
         }
+    }
 
+    public void Render()
+    {
+        board.Render();
+        block?.Render();
     }
 
     private bool CheckCollision()
     {
-        for (int i = 0; i < block?.Shape.Length; i++)
+        for (int i = 0; i < block?.PieceLayout.Length; i++)
         {
-            for (int j = 0; j < block.Shape[i].Length; j++)
+            for (int j = 0; j < block.PieceLayout[i].Length; j++)
             {
-                if (block.Shape[i][j] == '█')
+                if (block.PieceLayout[i][j] == '█')
                 {
                     if (board.BoardGrid[block.PosY + i][block.PosX + j] == '█')
                     {

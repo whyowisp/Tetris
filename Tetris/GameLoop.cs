@@ -83,7 +83,7 @@ class Gameloop
 
         if (boardController.block == null)
         {
-            boardController.CreateBlock();
+            boardController.CreateBlock(10, 0);
         }
 
         switch (userAction)
@@ -102,10 +102,10 @@ class Gameloop
                 blockDropRate = 200;
                 break;
             case UserAction.MoveLeft:
-                boardController.MoveBlock(0, -1);
+                boardController.MoveBlock(-1, 0);
                 break;
             case UserAction.MoveRight:
-                boardController.MoveBlock(0, 1);
+                boardController.MoveBlock(1, 0);
                 break;
             case UserAction.None:
                 blockDropRate = 1000;
@@ -116,7 +116,7 @@ class Gameloop
 
         if (timeElapsedForDrop.TotalMilliseconds >= blockDropRate)
         {
-            boardController.MoveBlock(1, 0); //move block down
+            boardController.MoveBlock(0, 1);
 
             timeElapsedForDrop = TimeSpan.Zero;
         }
@@ -130,10 +130,8 @@ class Gameloop
         {
             Console.Clear();
             Console.SetCursorPosition(0, 0);
-            boardController.board.Render();
+            boardController.Render();
             timeElapsedForRender = TimeSpan.Zero;
         }
-
-        //Thread.Sleep(100);
     }
 }
