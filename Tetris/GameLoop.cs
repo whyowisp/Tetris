@@ -83,7 +83,7 @@ class Gameloop
 
         if (boardController.Piece == null)
         {
-            int spawnX = boardController.board.GetWidth() / 2 - 1;
+            int spawnX = boardController.GameBoard.GetWidth() / 2 - 1;
             boardController.SpawnPiece(spawnX, 0);
         }
 

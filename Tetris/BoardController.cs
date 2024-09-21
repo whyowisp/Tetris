@@ -4,11 +4,11 @@ namespace TetrisGame;
 
 class BoardController
 {
-    public Board board { get; set; }
+    public Board GameBoard { get; set; }
     public Piece? Piece { get; private set; }
     public BoardController()
     {
-        board = new Board();
+        GameBoard = new Board();
     }
 
     public void SpawnPiece(int x, int y)
@@ -19,34 +19,48 @@ class BoardController
         }
     }
 
+    // There is a bug with this method. Can you find it?
+    // Just kidding. The rotation against the wall causes piece to merge into it.
     public void RotatePiece()
     {
-        Piece?.Rotate();
-
         bool collision = CheckCollision(0, 0);
+
         if (collision)
         {
-            board.MergeWithBoard(Piece);
+            GameBoard.MergeWithBoard(Piece);
             Piece = null;
-
+            return;
         }
+
+        Piece?.Rotate();
     }
 
     public void MovePiece(int nextX, int nextY)
     {
-        bool collision = CheckCollision(nextX, nextY);
-        if (collision)
+        if (Piece == null)
         {
-            board.MergeWithBoard(Piece);
+            return;
+        }
+
+        bool collision = CheckCollision(nextX, nextY);
+
+        if (collision && nextY != 0) //It's the bottom edge
+        {
+            GameBoard.MergeWithBoard(Piece);
             Piece = null;
             return;
         }
+        if (collision && nextX != 0) //It's the wall
+        {
+            return;
+        }
+
         Piece?.ChangePosition(nextX, nextY);
     }
 
     public void Render()
     {
-        board.Render();
+        GameBoard.Render();
         Piece?.Render();
     }
 
@@ -58,11 +72,7 @@ class BoardController
             {
                 if (Piece!.PieceLayout[i][j] == '█')
                 {
-                    //Console.WriteLine("Piece content: {0} at y = {1}", piece!.PieceLayout[i][j], i);
-                    //Console.WriteLine("Board content: {0} at y = {1}",
-                    //board.BoardLayout[piece!.PosY + nextY + i][piece!.PosX + nextX + j], piece!.PosY + nextY + i);
-                    //Console.ReadKey();
-                    if (board.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j] == '█')
+                    if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j] == '█')
                     {
                         return true;
                     }
