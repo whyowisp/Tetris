@@ -129,7 +129,7 @@ class Gameloop
 
         if (timeElapsedForRender.TotalMilliseconds >= frameInterval)
         {
-            Console.Clear();
+            //Console.Clear(); // For performance, clearing is done in update method.
             Console.SetCursorPosition(0, 0);
             boardController.Render();
             timeElapsedForRender = TimeSpan.Zero;

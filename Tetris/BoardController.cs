@@ -60,6 +60,9 @@ class BoardController
 
     public void Render()
     {
+        // Rendering in this order releases us from the pain of using Console.Clear() method
+        // Down side being that when block is close to other occupied space, the empty spaces from
+        // the block will temprorarily overwrite the occupied spaces.
         GameBoard.Render();
         Piece?.Render();
     }
