@@ -1,68 +1,71 @@
+using System.Runtime.CompilerServices;
+
 namespace TetrisGame;
 
 class BoardController
 {
     public Board board { get; set; }
-    public Block? block { get; private set; }
+    public Piece? Piece { get; private set; }
     public BoardController()
     {
         board = new Board();
     }
 
-    public void CreateBlock(int x, int y)
+    public void SpawnPiece(int x, int y)
     {
-        if (block == null)
+        if (Piece == null)
         {
-            block = new Block(x, y);
+            Piece = new Piece(x, y);
         }
     }
 
-    public void RotateBlock()
+    public void RotatePiece()
     {
-        block?.Rotate();
+        Piece?.Rotate();
 
-        bool collision = CheckCollision();
+        bool collision = CheckCollision(0, 0);
         if (collision)
         {
-            board.MergeWithBoard(block);
-            block = null;
+            board.MergeWithBoard(Piece);
+            Piece = null;
 
         }
     }
 
-    public void MoveBlock(int x, int y)
+    public void MovePiece(int nextX, int nextY)
     {
-        block?.ChangePosition(x, y);
-
-        bool collision = CheckCollision();
+        bool collision = CheckCollision(nextX, nextY);
         if (collision)
         {
-            board.MergeWithBoard(block);
-            block = null;
+            board.MergeWithBoard(Piece);
+            Piece = null;
+            return;
         }
+        Piece?.ChangePosition(nextX, nextY);
     }
 
     public void Render()
     {
         board.Render();
-        block?.Render();
+        Piece?.Render();
     }
 
-    private bool CheckCollision()
+    private bool CheckCollision(int nextX, int nextY)
     {
-        for (int i = 0; i < block?.PieceLayout.Length; i++)
+        for (int i = 0; i < Piece!.PieceLayout.Length; i++)
         {
-            for (int j = 0; j < block.PieceLayout[i].Length; j++)
+            for (int j = 0; j < Piece!.PieceLayout[i].Length; j++)
             {
-                if (block.PieceLayout[i][j] == '█')
+                if (Piece!.PieceLayout[i][j] == '█')
                 {
-                    if (board.BoardLayout[block.PosY + i][block.PosX + j] == '█')
+                    //Console.WriteLine("Piece content: {0} at y = {1}", piece!.PieceLayout[i][j], i);
+                    //Console.WriteLine("Board content: {0} at y = {1}",
+                    //board.BoardLayout[piece!.PosY + nextY + i][piece!.PosX + nextX + j], piece!.PosY + nextY + i);
+                    //Console.ReadKey();
+                    if (board.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j] == '█')
                     {
-                        Console.WriteLine("block.PosY: {0}, block.PosX: {1}", block.PosY, block.PosX);
-                        Console.ReadKey();
                         return true;
                     }
-
                 }
             }
         }

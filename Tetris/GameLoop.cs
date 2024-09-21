@@ -25,11 +25,11 @@ class Gameloop
 {
     private static Gameloop? instance;
 
-    private const short targetFrameRate = 5;
+    private const short targetFrameRate = 3;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
-    private short blockDropRate = 1000;
+    private short updateInterval = 1000;
     private TimeSpan timeElapsedForDrop;
 
     private bool isRunning = true;
@@ -81,9 +81,10 @@ class Gameloop
     {
         timeElapsedForDrop += elapsedTime;
 
-        if (boardController.block == null)
+        if (boardController.Piece == null)
         {
-            boardController.CreateBlock(20, 5);
+            int spawnX = boardController.board.GetWidth() / 2 - 1;
+            boardController.SpawnPiece(spawnX, 0);
         }
 
         switch (userAction)
@@ -96,27 +97,27 @@ class Gameloop
                 Console.ReadKey();
                 break;
             case UserAction.Rotate:
-                boardController.RotateBlock();
+                boardController.RotatePiece();
                 break;
             case UserAction.Drop:
-                blockDropRate = 200;
+                updateInterval = 200;
                 break;
             case UserAction.MoveLeft:
-                boardController.MoveBlock(-1, 0);
+                boardController.MovePiece(-1, 0);
                 break;
             case UserAction.MoveRight:
-                boardController.MoveBlock(1, 0);
+                boardController.MovePiece(1, 0);
                 break;
             case UserAction.None:
-                blockDropRate = 1000;
+                updateInterval = 1000;
                 break;
             default:
                 break;
         }
 
-        if (timeElapsedForDrop.TotalMilliseconds >= blockDropRate)
+        if (timeElapsedForDrop.TotalMilliseconds >= updateInterval)
         {
-            boardController.MoveBlock(0, 0);
+            boardController.MovePiece(0, 1);
 
             timeElapsedForDrop = TimeSpan.Zero;
         }

@@ -2,7 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace TetrisGame;
 
-public class Block
+public class Piece
 {
     private char[][][] possibleShapes =
     {
@@ -20,7 +20,7 @@ public class Block
     public string Color { get; private set; }
     public int PosX { get; private set; }
     public int PosY { get; private set; }
-    public Block(int x, int y)
+    public Piece(int x, int y)
     {
         Random random = new Random();
         PieceLayout = possibleShapes[random.Next(possibleShapes.Length)];

@@ -2,7 +2,7 @@ namespace TetrisGame;
 
 class Board
 {
-    private const int boardHeight = 20;
+    private const int boardHeight = 10; //20
     private const int boardWidth = 25;
     private const int marginRight = 25; //Margin is used to prevent out of bounds exception at the right edge of the board
     public char[][] BoardLayout { get; private set; }
@@ -16,7 +16,12 @@ class Board
         InitializeBoardEdges();
     }
 
-    public void MergeWithBoard(Block block)
+    public int GetWidth()
+    {
+        return boardWidth;
+    }
+
+    public void MergeWithBoard(Piece block)
     {
         for (int i = 0; i < block.PieceLayout.Length; i++)
         {
