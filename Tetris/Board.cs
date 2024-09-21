@@ -4,14 +4,14 @@ class Board
 {
     private const int boardHeight = 20;
     private const int boardWidth = 25;
-    private const int marginRight = 5; //Margin is used to prevent out of bounds exception at the right edge of the board
-    public char[][] BoardGrid { get; private set; }
+    private const int marginRight = 25; //Margin is used to prevent out of bounds exception at the right edge of the board
+    public char[][] BoardLayout { get; private set; }
     public Board()
     {
-        BoardGrid = new char[boardHeight][];
-        for (int i = 0; i < BoardGrid.Length; i++)
+        BoardLayout = new char[boardHeight][];
+        for (int i = 0; i < BoardLayout.Length; i++)
         {
-            BoardGrid[i] = new char[boardWidth + marginRight];
+            BoardLayout[i] = new char[boardWidth + marginRight];
         }
         InitializeBoardEdges();
     }
@@ -20,22 +20,22 @@ class Board
     {
         for (int i = 0; i < block.PieceLayout.Length; i++)
         {
-            for (int j = 0; j < block.PieceLayout[i].Length - marginRight; j++)
+            for (int j = 0; j < block.PieceLayout[i].Length; j++)
             {
                 if (block.PieceLayout[i][j] == '█')
                 {
-                    BoardGrid[block.PosX + i][block.PosY + j] = '█';
+                    BoardLayout[block.PosY + i][block.PosX + j] = '█';
                 }
             }
         }
     }
     public void Render()
     {
-        for (int i = 0; i < BoardGrid.Length; i++)
+        for (int i = 0; i < BoardLayout.Length; i++)
         {
-            for (int j = 0; j < BoardGrid[i].Length; j++)
+            for (int j = 0; j < BoardLayout[i].Length; j++)
             {
-                Console.Write(BoardGrid[i][j]);
+                Console.Write(BoardLayout[i][j]);
             }
             Console.WriteLine();
         }
@@ -43,18 +43,20 @@ class Board
 
     private void InitializeBoardEdges()
     {
-        for (int i = 0; i < BoardGrid.Length; i++)
+        for (int i = 0; i < BoardLayout.Length; i++)
         {
-            for (int j = 0; j < BoardGrid[i].Length; j++)
+            for (int j = 0; j < BoardLayout[i].Length; j++)
             {
-                if (i == BoardGrid.Length - 1 || j == 0 || j == BoardGrid[i].Length - 1)
+                // if statement: left edge || right edge || bottom edge, excluding right margin)
+                if (j == 0 || j == boardWidth - 1 || (i == boardHeight - 1 && j < boardWidth))
                 {
-                    BoardGrid[i][j] = '█';
+                    BoardLayout[i][j] = '█';
                 }
                 else
                 {
-                    BoardGrid[i][j] = ' ';
+                    BoardLayout[i][j] = ' ';
                 }
+
 
             }
         }

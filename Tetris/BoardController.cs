@@ -56,7 +56,7 @@ class BoardController
             {
                 if (block.PieceLayout[i][j] == '█')
                 {
-                    if (board.BoardGrid[block.PosY + i][block.PosX + j] == '█')
+                    if (board.BoardLayout[block.PosY + i][block.PosX + j] == '█')
                     {
                         Console.WriteLine("block.PosY: {0}, block.PosX: {1}", block.PosY, block.PosX);
                         Console.ReadKey();
