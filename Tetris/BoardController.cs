@@ -63,6 +63,33 @@ class BoardController
         Piece?.ChangePosition(nextX, nextY);
     }
 
+    public void CollapseRows()
+    {
+        for (int i = GameBoard.BoardLayout.Length - 2; i >= 0; i--)
+        {
+            bool isRowFull = true;
+            for (int j = 1; j < GameBoard.GetWidth() - 1; j++)
+            {
+                if (GameBoard.BoardLayout[i][j].Symbol == ' ')
+                {
+                    isRowFull = false;
+                    break;
+                }
+            }
+
+            if (isRowFull)
+            {
+                for (int k = i; k >= 1; k--)
+                {
+                    for (int l = 1; l < GameBoard.BoardLayout[k].Length - 1; l++)
+                    {
+                        GameBoard.BoardLayout[k][l] = GameBoard.BoardLayout[k - 1][l];
+                    }
+                }
+            }
+        }
+    }
+
     public void Render()
     {
         // Rendering in this order releases us from the pain of using Console.Clear() method

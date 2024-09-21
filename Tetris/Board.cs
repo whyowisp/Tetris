@@ -40,7 +40,9 @@ class Board
             {
                 if (piece.PieceLayout[i][j] == '█')
                 {
-                    BoardLayout[piece.PosY + i][piece.PosX + j] = new EntryData((Color)Enum.Parse(typeof(Color), piece.Color), piece.PieceLayout[i][j]);
+                    BoardLayout[piece.PosY + i][piece.PosX + j] =
+                        new EntryData((Color)Enum
+                            .Parse(typeof(Color), piece.Color), piece.PieceLayout[i][j]);
                 }
             }
         }
@@ -51,7 +53,8 @@ class Board
         {
             for (int j = 0; j < BoardLayout[i].Length; j++)
             {
-                Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), BoardLayout[i][j].Color.ToString());
+                Console.ForegroundColor = (ConsoleColor)Enum
+                    .Parse(typeof(ConsoleColor), BoardLayout[i][j].Color.ToString());
                 Console.Write(BoardLayout[i][j].Symbol);
             }
             Console.WriteLine();

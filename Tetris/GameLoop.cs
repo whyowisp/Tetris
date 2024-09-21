@@ -4,7 +4,7 @@ class Gameloop
 {
     private static Gameloop? instance;
 
-    private const short targetFrameRate = 3;
+    private const short targetFrameRate = 30;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
@@ -79,7 +79,7 @@ class Gameloop
                 boardController.RotatePiece();
                 break;
             case UserAction.Drop:
-                updateInterval = 200;
+                updateInterval = frameInterval; // Consistent rendering, drop speed could be super fast.
                 break;
             case UserAction.MoveLeft:
                 boardController.MovePiece(-1, 0);
@@ -97,6 +97,7 @@ class Gameloop
         if (timeElapsedForDrop.TotalMilliseconds >= updateInterval)
         {
             boardController.MovePiece(0, 1);
+            boardController.CollapseRows();
 
             timeElapsedForDrop = TimeSpan.Zero;
         }

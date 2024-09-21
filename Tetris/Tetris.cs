@@ -13,6 +13,7 @@ enum UserAction
     Quit,
     None
 }
+
 enum Color
 {
     Red,
@@ -23,7 +24,6 @@ enum Color
     Cyan,
     White
 }
-
 
 enum GameState
 {
@@ -36,6 +36,8 @@ class Tetris
 {
     public static void Start()
     {
+        Console.CursorVisible = false;
+
         var entryScreen = new EntryScreen();
         entryScreen.Show();
         Gameloop.Instance.Run();
