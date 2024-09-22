@@ -32,11 +32,11 @@ enum GameState
     GameOver
 }
 
-public struct EntryData
+public struct Cell
 {
     public char Symbol { get; private set; }
     public ConsoleColor Color { get; }
-    public EntryData(ConsoleColor color, char symbol)
+    public Cell(ConsoleColor color, char symbol)
     {
         Color = color;
         Symbol = symbol;

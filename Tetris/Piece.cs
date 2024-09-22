@@ -17,7 +17,7 @@ public class Piece
     };
 
     private Random random = new Random();
-    public EntryData[][] PieceLayout { get; private set; }
+    public Cell[][] PieceLayout { get; private set; }
     public ConsoleColor Color { get; private set; }
     public int PosX { get; private set; }
     public int PosY { get; private set; }
@@ -30,15 +30,15 @@ public class Piece
         PosY = y;
     }
 
-    private EntryData[][] AssignShapeToPieceLayout(char[][] shapeSelected)
+    private Cell[][] AssignShapeToPieceLayout(char[][] shapeSelected)
     {
-        EntryData[][] pieceLayout = new EntryData[shapeSelected.Length][];
+        Cell[][] pieceLayout = new Cell[shapeSelected.Length][];
         for (int i = 0; i < shapeSelected.Length; i++)
         {
-            pieceLayout[i] = new EntryData[shapeSelected[i].Length];
+            pieceLayout[i] = new Cell[shapeSelected[i].Length];
             for (int j = 0; j < shapeSelected[i].Length; j++)
             {
-                pieceLayout[i][j] = new EntryData(Color, shapeSelected[i][j]);
+                pieceLayout[i][j] = new Cell(Color, shapeSelected[i][j]);
             }
         }
         return pieceLayout;
@@ -48,11 +48,11 @@ public class Piece
     {
         int rows = PieceLayout.Length;
         int cols = PieceLayout[0].Length;
-        EntryData[][] newShape = new EntryData[cols][];
+        Cell[][] newShape = new Cell[cols][];
 
         for (int i = 0; i < cols; i++)
         {
-            newShape[i] = new EntryData[rows];
+            newShape[i] = new Cell[rows];
             for (int j = 0; j < rows; j++)
             {
                 newShape[i][j] = PieceLayout[rows - j - 1][i];

@@ -5,13 +5,13 @@ class Board
     private const int boardHeight = 10; //20
     private const int boardWidth = 25;
     private const int marginRight = 5; //Margin is used to prevent out of bounds exception at the right edge of the board
-    public EntryData[][] BoardLayout { get; private set; }
+    public Cell[][] BoardLayout { get; private set; }
     public Board()
     {
-        BoardLayout = new EntryData[boardHeight][];
+        BoardLayout = new Cell[boardHeight][];
         for (int i = 0; i < BoardLayout.Length; i++)
         {
-            BoardLayout[i] = new EntryData[boardWidth + marginRight];
+            BoardLayout[i] = new Cell[boardWidth + marginRight];
         }
         InitializeBoardEdges();
     }
@@ -30,7 +30,7 @@ class Board
                 if (piece.PieceLayout[i][j].Symbol == '█')
                 {
                     BoardLayout[piece.PosY + i][piece.PosX + j] =
-                        new EntryData(piece.PieceLayout[i][j].Color, piece.PieceLayout[i][j].Symbol);
+                        new Cell(piece.PieceLayout[i][j].Color, piece.PieceLayout[i][j].Symbol);
                 }
             }
         }
@@ -57,11 +57,11 @@ class Board
                 // if statement: left edge || right edge || bottom edge, excluding right margin)
                 if (j == 0 || j == boardWidth - 1 || (i == boardHeight - 1 && j < boardWidth))
                 {
-                    BoardLayout[i][j] = new EntryData(ConsoleColor.Gray, '█');
+                    BoardLayout[i][j] = new Cell(ConsoleColor.Gray, '█');
                 }
                 else
                 {
-                    BoardLayout[i][j] = new EntryData(ConsoleColor.Green, ' ');
+                    BoardLayout[i][j] = new Cell(ConsoleColor.Green, ' ');
                 }
             }
         }
