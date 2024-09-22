@@ -2,8 +2,9 @@ namespace TetrisGame;
 
 class Board
 {
-    private const int boardHeight = 10; //20
-    private const int boardWidth = 25;
+    // Tetris board is 10x20
+    private const int boardHeight = 20;
+    private const int boardWidth = 12; // 10x20 + 2 for the walls
     private const int marginRight = 5; //Margin is used to prevent out of bounds exception at the right edge of the board
     public Cell[][] BoardLayout { get; private set; }
     public Board()

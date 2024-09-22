@@ -4,6 +4,7 @@ namespace TetrisGame;
 
 class BoardController
 {
+    private bool pieceCreatedInThisRound = false;
     public Board GameBoard { get; set; }
     public Piece? Piece { get; private set; }
     public BoardController()
@@ -16,6 +17,7 @@ class BoardController
         if (Piece == null)
         {
             Piece = new Piece(x, y);
+            pieceCreatedInThisRound = true;
         }
     }
 
@@ -29,7 +31,6 @@ class BoardController
         }
 
         bool collision = CheckCollision(0, 0);
-
         if (collision)
         {
             GameBoard.MergeWithBoard(Piece);
@@ -49,6 +50,8 @@ class BoardController
 
         bool collision = CheckCollision(nextX, nextY);
 
+        CheckGameOverCondition(collision, pieceCreatedInThisRound);
+
         if (collision && nextY != 0) //It's the bottom edge
         {
             GameBoard.MergeWithBoard(Piece);
@@ -60,7 +63,9 @@ class BoardController
             return;
         }
 
+        //All good, safe to move
         Piece?.ChangePosition(nextX, nextY);
+        pieceCreatedInThisRound = false;
     }
 
     public void CollapseRows()
@@ -117,5 +122,13 @@ class BoardController
             }
         }
         return false;
+    }
+    private void CheckGameOverCondition(bool collision, bool pieceCreatedInThisRound)
+    {
+        if (collision && pieceCreatedInThisRound)
+        {
+            Console.WriteLine("Game Over");
+            Thread.Sleep(2000);
+        }
     }
 }

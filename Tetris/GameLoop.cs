@@ -4,7 +4,7 @@ class Gameloop
 {
     private static Gameloop? instance;
 
-    private const short targetFrameRate = 30;
+    private const short targetFrameRate = 10;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
