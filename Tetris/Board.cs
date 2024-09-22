@@ -27,7 +27,7 @@ class Board
         {
             for (int j = 0; j < piece.PieceLayout[i].Length; j++)
             {
-                if (piece.PieceLayout[i][j].Symbol == '█')
+                if (piece.PieceLayout[i][j].Symbol[0] == '█')
                 {
                     BoardLayout[piece.PosY + i][piece.PosX + j] =
                         new Cell(piece.PieceLayout[i][j].Color, piece.PieceLayout[i][j].Symbol);
@@ -50,6 +50,8 @@ class Board
 
     private void InitializeBoardEdges()
     {
+        char[] blockSymbol = { '█', '█' };
+        char[] emptySymbol = { ' ', ' ' };
         for (int i = 0; i < BoardLayout.Length; i++)
         {
             for (int j = 0; j < BoardLayout[i].Length; j++)
@@ -57,11 +59,11 @@ class Board
                 // if statement: left edge || right edge || bottom edge, excluding right margin)
                 if (j == 0 || j == boardWidth - 1 || (i == boardHeight - 1 && j < boardWidth))
                 {
-                    BoardLayout[i][j] = new Cell(ConsoleColor.Gray, '█');
+                    BoardLayout[i][j] = new Cell(ConsoleColor.Gray, blockSymbol);
                 }
                 else
                 {
-                    BoardLayout[i][j] = new Cell(ConsoleColor.Green, ' ');
+                    BoardLayout[i][j] = new Cell(ConsoleColor.Green, emptySymbol);
                 }
             }
         }

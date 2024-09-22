@@ -33,12 +33,14 @@ public class Piece
     private Cell[][] AssignShapeToPieceLayout(char[][] shapeSelected)
     {
         Cell[][] pieceLayout = new Cell[shapeSelected.Length][];
+
         for (int i = 0; i < shapeSelected.Length; i++)
         {
             pieceLayout[i] = new Cell[shapeSelected[i].Length];
             for (int j = 0; j < shapeSelected[i].Length; j++)
             {
-                pieceLayout[i][j] = new Cell(Color, shapeSelected[i][j]);
+                char[] symbol = { shapeSelected[i][j], shapeSelected[i][j] }; // double the symbol to make it look like a square
+                pieceLayout[i][j] = new Cell(Color, symbol);
             }
         }
         return pieceLayout;
@@ -69,12 +71,15 @@ public class Piece
 
     public void Render()
     {
-        Console.ForegroundColor = (ConsoleColor)Color;
+        Console.ForegroundColor = Color;
         for (int i = 0; i < PieceLayout.Length; i++)
         {
             for (int j = 0; j < PieceLayout[i].Length; j++)
             {
-                Console.SetCursorPosition(PosX + j, PosY + i);
+                // This is a hacky way of saying i live in different coordinate system.
+                // Basically the cursor must be moved right by symbol.Length to make it look like a square.
+                // Remind you that symbol is char[] = { '█', '█' }
+                Console.SetCursorPosition((PosX + j) * 2, PosY + i);
                 Console.Write(PieceLayout[i][j].Symbol);
             }
             Console.WriteLine();

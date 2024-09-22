@@ -70,7 +70,7 @@ class BoardController
             bool isRowFull = true;
             for (int j = 1; j < GameBoard.GetWidth() - 1; j++)
             {
-                if (GameBoard.BoardLayout[i][j].Symbol == ' ')
+                if (GameBoard.BoardLayout[i][j].Symbol[0] == ' ')
                 {
                     isRowFull = false;
                     break;
@@ -106,9 +106,9 @@ class BoardController
         {
             for (int j = 0; j < Piece!.PieceLayout[i].Length; j++)
             {
-                if (Piece!.PieceLayout[i][j].Symbol == '█')
+                if (Piece!.PieceLayout[i][j].Symbol[0] == '█')
                 {
-                    if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j].Symbol == '█')
+                    if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j].Symbol[0] == '█')
                     {
                         Console.WriteLine("Collision detected");
                         return true;
