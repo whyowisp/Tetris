@@ -1,10 +1,13 @@
+using System.Drawing;
+using System.Net;
+
 namespace TetrisGame;
 
 class Gameloop
 {
     private static Gameloop? instance;
     private BoardController boardController = new BoardController();
-    GameState gameState = GameState.Standby;
+    GameState gameState = GameState.Paused;
 
     // Render variables
     private const short targetFrameRate = 10;
@@ -47,15 +50,22 @@ class Gameloop
 
             UserAction userAction = UserInput.Listen();
 
-            Update(userAction, elapsedTime);
-            Render(elapsedTime);
-
+            switch (gameState)
+            {
+                case GameState.Running:
+                    Update(userAction, elapsedTime);
+                    Render(elapsedTime);
+                    break;
+                case GameState.Collapsing:
+                    break;
+                case GameState.Quit:
+                    Console.WriteLine("Game Quit");
+                    break;
+                case GameState.GameOver:
+                    Console.WriteLine("Game Over");
+                    break;
+            }
             previousTime = currentTime;
-        }
-
-        if (gameState == GameState.GameOver)
-        {
-            Console.WriteLine("Game Over");
         }
     }
 
@@ -105,7 +115,12 @@ class Gameloop
                 gameState = GameState.GameOver;
                 return;
             }
-            boardController.CollapseRows();
+            short rowsCleared = boardController.CollapseRows();
+            PointsCalculator.CalculatePoints(rowsCleared);
+            if (rowsCleared > 0)
+            {
+                Console.Title = $"Tetris - Points: {PointsCalculator.TotalPoints}";
+            }
 
             timeElapsedForDrop = TimeSpan.Zero;
         }

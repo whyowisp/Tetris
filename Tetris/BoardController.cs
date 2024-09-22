@@ -68,8 +68,10 @@ class BoardController
         pieceCreatedInThisRound = false;
     }
 
-    public void CollapseRows()
+    public short CollapseRows()
     {
+        short rowsCleared = 0;
+
         for (int i = GameBoard.BoardLayout.Length - 2; i >= 0; i--)
         {
             bool isRowFull = true;
@@ -84,7 +86,7 @@ class BoardController
 
             if (isRowFull)
             {
-                Console.WriteLine("Row is full");
+                rowsCleared++;
                 for (int k = i; k >= 1; k--)
                 {
                     for (int l = 1; l < GameBoard.BoardLayout[k].Length - 1; l++)
@@ -94,6 +96,7 @@ class BoardController
                 }
             }
         }
+        return rowsCleared;
     }
 
     public void Render()
