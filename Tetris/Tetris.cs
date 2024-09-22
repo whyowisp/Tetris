@@ -14,15 +14,15 @@ enum UserAction
     None
 }
 
-enum Color
+public enum Color
 {
-    Red,
-    Green,
-    Blue,
-    Yellow,
-    Magenta,
-    Cyan,
-    White
+    Red = ConsoleColor.Red,
+    Green = ConsoleColor.Green,
+    Blue = ConsoleColor.Blue,
+    Yellow = ConsoleColor.Yellow,
+    Magenta = ConsoleColor.Magenta,
+    Cyan = ConsoleColor.Cyan,
+    Gray = ConsoleColor.Gray,
 }
 
 enum GameState
@@ -30,6 +30,17 @@ enum GameState
     Running,
     Paused,
     GameOver
+}
+
+public struct EntryData
+{
+    public char Symbol { get; private set; }
+    public ConsoleColor Color { get; }
+    public EntryData(ConsoleColor color, char symbol)
+    {
+        Color = color;
+        Symbol = symbol;
+    }
 }
 
 class Tetris

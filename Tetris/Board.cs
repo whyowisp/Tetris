@@ -1,16 +1,5 @@
 namespace TetrisGame;
 
-struct EntryData
-{
-    public char Symbol { get; private set; }
-    public Color Color { get; }
-    public EntryData(Color color, char symbol)
-    {
-        Color = color;
-        Symbol = symbol;
-    }
-}
-
 class Board
 {
     private const int boardHeight = 10; //20
@@ -38,11 +27,10 @@ class Board
         {
             for (int j = 0; j < piece.PieceLayout[i].Length; j++)
             {
-                if (piece.PieceLayout[i][j] == '█')
+                if (piece.PieceLayout[i][j].Symbol == '█')
                 {
                     BoardLayout[piece.PosY + i][piece.PosX + j] =
-                        new EntryData((Color)Enum
-                            .Parse(typeof(Color), piece.Color), piece.PieceLayout[i][j]);
+                        new EntryData(piece.PieceLayout[i][j].Color, piece.PieceLayout[i][j].Symbol);
                 }
             }
         }
@@ -53,8 +41,7 @@ class Board
         {
             for (int j = 0; j < BoardLayout[i].Length; j++)
             {
-                Console.ForegroundColor = (ConsoleColor)Enum
-                    .Parse(typeof(ConsoleColor), BoardLayout[i][j].Color.ToString());
+                Console.ForegroundColor = BoardLayout[i][j].Color;
                 Console.Write(BoardLayout[i][j].Symbol);
             }
             Console.WriteLine();
@@ -70,11 +57,11 @@ class Board
                 // if statement: left edge || right edge || bottom edge, excluding right margin)
                 if (j == 0 || j == boardWidth - 1 || (i == boardHeight - 1 && j < boardWidth))
                 {
-                    BoardLayout[i][j] = new EntryData(Color.White, '█');
+                    BoardLayout[i][j] = new EntryData(ConsoleColor.Gray, '█');
                 }
                 else
                 {
-                    BoardLayout[i][j] = new EntryData(Color.White, ' ');
+                    BoardLayout[i][j] = new EntryData(ConsoleColor.Green, ' ');
                 }
             }
         }

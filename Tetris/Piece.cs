@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TetrisGame;
 
@@ -18,27 +17,42 @@ public class Piece
     };
 
     private Random random = new Random();
-    public char[][] PieceLayout { get; private set; }
-    public string Color { get; private set; }
+    public EntryData[][] PieceLayout { get; private set; }
+    public ConsoleColor Color { get; private set; }
     public int PosX { get; private set; }
     public int PosY { get; private set; }
     public Piece(int x, int y)
     {
-        PieceLayout = possibleShapes[random.Next(possibleShapes.Length)];
-        Color = GetRandomColor().ToString();
+        char[][] selectedShape = possibleShapes[random.Next(possibleShapes.Length)];
+        Color = GetRandomColor();
+        PieceLayout = AssignShapeToPieceLayout(selectedShape);
         PosX = x;
         PosY = y;
+    }
+
+    private EntryData[][] AssignShapeToPieceLayout(char[][] shapeSelected)
+    {
+        EntryData[][] pieceLayout = new EntryData[shapeSelected.Length][];
+        for (int i = 0; i < shapeSelected.Length; i++)
+        {
+            pieceLayout[i] = new EntryData[shapeSelected[i].Length];
+            for (int j = 0; j < shapeSelected[i].Length; j++)
+            {
+                pieceLayout[i][j] = new EntryData(Color, shapeSelected[i][j]);
+            }
+        }
+        return pieceLayout;
     }
 
     public void Rotate()
     {
         int rows = PieceLayout.Length;
         int cols = PieceLayout[0].Length;
-        char[][] newShape = new char[cols][];
+        EntryData[][] newShape = new EntryData[cols][];
 
         for (int i = 0; i < cols; i++)
         {
-            newShape[i] = new char[rows];
+            newShape[i] = new EntryData[rows];
             for (int j = 0; j < rows; j++)
             {
                 newShape[i][j] = PieceLayout[rows - j - 1][i];
@@ -55,25 +69,25 @@ public class Piece
 
     public void Render()
     {
-        Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Color);
+        Console.ForegroundColor = (ConsoleColor)Color;
         for (int i = 0; i < PieceLayout.Length; i++)
         {
             for (int j = 0; j < PieceLayout[i].Length; j++)
             {
                 Console.SetCursorPosition(PosX + j, PosY + i);
-                Console.Write(PieceLayout[i][j]);
+                Console.Write(PieceLayout[i][j].Symbol);
             }
             Console.WriteLine();
         }
         Console.ResetColor();
     }
 
-    private Color GetRandomColor()
+    private ConsoleColor GetRandomColor()
     {
-        Color color = TetrisGame.Color.White;
-        while (color == TetrisGame.Color.White)
+        ConsoleColor color = ConsoleColor.Gray;
+        while (color == ConsoleColor.Gray)
         {
-            color = (Color)Enum.Parse(typeof(Color), Enum.GetNames(typeof(Color))[random.Next(Enum.GetNames(typeof(Color)).Length)]);
+            color = (ConsoleColor)random.Next(Enum.GetValues<ConsoleColor>().Length);
         }
         return color;
     }
