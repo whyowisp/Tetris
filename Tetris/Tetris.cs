@@ -27,8 +27,10 @@ public enum Color
 
 enum GameState
 {
+    Standby,
     Running,
     Paused,
+    Quit,
     GameOver
 }
 

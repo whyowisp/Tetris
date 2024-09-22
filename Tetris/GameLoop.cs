@@ -3,18 +3,17 @@ namespace TetrisGame;
 class Gameloop
 {
     private static Gameloop? instance;
+    private BoardController boardController = new BoardController();
+    GameState gameState = GameState.Standby;
 
+    // Render variables
     private const short targetFrameRate = 10;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
+    // Update variables
     private short updateInterval = 1000;
     private TimeSpan timeElapsedForDrop;
-
-    private bool isRunning = true;
-
-    private BoardController boardController = new BoardController();
-
 
     private Gameloop() { }
 
@@ -32,27 +31,31 @@ class Gameloop
 
     public void Run()
     {
-
         Console.CursorVisible = false;
         Console.Clear();
+
+        gameState = GameState.Running;
 
         DateTime currentTime;
         DateTime previousTime = DateTime.Now;
         TimeSpan elapsedTime;
 
-        while (isRunning)
+        while (gameState != GameState.GameOver && gameState != GameState.Quit)
         {
             currentTime = DateTime.Now;
             elapsedTime = currentTime - previousTime;
 
             UserAction userAction = UserInput.Listen();
-            //Console.WriteLine("UserAction: {0}", userAction)
 
             Update(userAction, elapsedTime);
             Render(elapsedTime);
 
-
             previousTime = currentTime;
+        }
+
+        if (gameState == GameState.GameOver)
+        {
+            Console.WriteLine("Game Over");
         }
     }
 
@@ -69,7 +72,7 @@ class Gameloop
         switch (userAction)
         {
             case UserAction.Quit:
-                isRunning = false;
+                gameState = GameState.Quit;
                 break;
             case UserAction.Pause:
                 Console.WriteLine("Game Paused");
@@ -82,10 +85,10 @@ class Gameloop
                 updateInterval = frameInterval; // Consistent rendering, drop speed could be super fast.
                 break;
             case UserAction.MoveLeft:
-                boardController.MovePiece(-1, 0);
+                boardController.TryMoveSideways(-1, 0);
                 break;
             case UserAction.MoveRight:
-                boardController.MovePiece(1, 0);
+                boardController.TryMoveSideways(1, 0);
                 break;
             case UserAction.None:
                 updateInterval = 1000;
@@ -96,7 +99,12 @@ class Gameloop
 
         if (timeElapsedForDrop.TotalMilliseconds >= updateInterval)
         {
-            boardController.MovePiece(0, 1);
+            boardController.TryMoveDown(0, 1);
+            if (boardController.IsGameOver)
+            {
+                gameState = GameState.GameOver;
+                return;
+            }
             boardController.CollapseRows();
 
             timeElapsedForDrop = TimeSpan.Zero;

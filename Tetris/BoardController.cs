@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.Runtime.CompilerServices;
 
 namespace TetrisGame;
@@ -5,6 +6,7 @@ namespace TetrisGame;
 class BoardController
 {
     private bool pieceCreatedInThisRound = false;
+    public bool IsGameOver { get; private set; } = false;
     public Board GameBoard { get; set; }
     public Piece? Piece { get; private set; }
     public BoardController()
@@ -23,12 +25,10 @@ class BoardController
 
     // There is a bug with this method. Can you find it?
     // Just kidding. The rotation against the wall causes piece to merge into it.
+    // Besides, I'm not even sure that if rotating should cause merging.
     public void RotatePiece()
     {
-        if (Piece == null)
-        {
-            return;
-        }
+        if (Piece == null) return;
 
         bool collision = CheckCollision(0, 0);
         if (collision)
@@ -37,33 +37,33 @@ class BoardController
             Piece = null;
             return;
         }
-
         Piece?.Rotate();
     }
 
-    public void MovePiece(int nextX, int nextY)
+    public void TryMoveSideways(int nextX, int nextY)
     {
-        if (Piece == null)
-        {
-            return;
-        }
+        if (Piece == null) return;
 
         bool collision = CheckCollision(nextX, nextY);
+        if (!collision)
+        {
+            Piece?.ChangePosition(nextX, nextY);
+        }
+    }
 
-        CheckGameOverCondition(collision, pieceCreatedInThisRound);
+    public void TryMoveDown(int nextX, int nextY)
+    {
+        if (Piece == null) return;
 
-        if (collision && nextY != 0) //It's the bottom edge
+        bool collision = CheckCollision(nextX, nextY);
+        EvaluateGameOver(collision, pieceCreatedInThisRound);
+
+        if (collision && nextY != 0) //It's the bottom edge OR collision with another piece
         {
             GameBoard.MergeWithBoard(Piece);
             Piece = null;
             return;
         }
-        if (collision && nextX != 0) //It's the wall
-        {
-            return;
-        }
-
-        //All good, safe to move
         Piece?.ChangePosition(nextX, nextY);
         pieceCreatedInThisRound = false;
     }
@@ -123,12 +123,11 @@ class BoardController
         }
         return false;
     }
-    private void CheckGameOverCondition(bool collision, bool pieceCreatedInThisRound)
+    private void EvaluateGameOver(bool collision, bool pieceCreatedInThisRound)
     {
         if (collision && pieceCreatedInThisRound)
         {
-            Console.WriteLine("Game Over");
-            Thread.Sleep(2000);
+            IsGameOver = true;
         }
     }
 }
