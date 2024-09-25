@@ -1,4 +1,3 @@
-﻿using System;
-using TetrisGame;
+﻿using TetrisGame;
 
 Tetris.Start();

@@ -1,6 +1,3 @@
-using System.Reflection;
-using System.Diagnostics;
-
 namespace TetrisGame;
 
 enum UserAction
@@ -12,17 +9,6 @@ enum UserAction
     Pause,
     Quit,
     None
-}
-
-public enum Color
-{
-    Red = ConsoleColor.Red,
-    Green = ConsoleColor.Green,
-    Blue = ConsoleColor.Blue,
-    Yellow = ConsoleColor.Yellow,
-    Magenta = ConsoleColor.Magenta,
-    Cyan = ConsoleColor.Cyan,
-    Gray = ConsoleColor.Gray,
 }
 
 enum GameState
@@ -53,8 +39,6 @@ class Tetris
         Console.CursorVisible = false;
         Console.Clear();
 
-        var entryScreen = new EntryScreen();
-        entryScreen.Show();
         Gameloop.Instance.Run();
     }
 }

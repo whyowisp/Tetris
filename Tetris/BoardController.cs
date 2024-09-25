@@ -1,6 +1,3 @@
-using System.Dynamic;
-using System.Runtime.CompilerServices;
-
 namespace TetrisGame;
 
 class BoardController
@@ -87,9 +84,11 @@ class BoardController
 
     public void Render()
     {
-        // Rendering in this order releases us from the pain of using Console.Clear() method
+        // Rendering in this order (1. GameBoard, 2. Piece) releases us from the pain of using Console.Clear() method
         // Down side being that when block is close to other occupied space, the empty spaces from
         // the block will temprorarily overwrite the occupied spaces.
+
+        Console.SetCursorPosition(0, 0);
         GameBoard.Render();
         Console.WriteLine($"Tetris - Score: {ScoreManager.GetTotalScore()}");
         Piece?.Render();

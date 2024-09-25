@@ -1,6 +1,3 @@
-using System.Drawing;
-using System.Net;
-
 namespace TetrisGame;
 
 class Gameloop
@@ -14,7 +11,7 @@ class Gameloop
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
-    // Update variables
+    // Update-variables
     private short updateInterval = 1000;
     private TimeSpan timeElapsedForDrop;
 
@@ -74,7 +71,6 @@ class Gameloop
                 gameState = GameState.Collapsing;
             }
 
-
             switch (gameState)
             {
                 case GameState.Running:
@@ -114,7 +110,8 @@ class Gameloop
                     break;
                 case GameState.GameOver:
                     Console.WriteLine("Game Over");
-                    Thread.Sleep(2000);
+                    Console.WriteLine($"Total score: {ScoreManager.GetTotalScore()}");
+                    Console.ReadKey();
                     gameState = GameState.Quit;
                     break;
             }
@@ -122,15 +119,12 @@ class Gameloop
         }
     }
 
-
     private void Render(TimeSpan elapsedTime)
     {
         timeElapsedForRender += elapsedTime;
 
         if (timeElapsedForRender.TotalMilliseconds >= frameInterval)
         {
-            //Console.Clear(); // For performance, clearing is done in update method.
-            Console.SetCursorPosition(0, 0);
             boardController.Render();
 
             timeElapsedForRender = TimeSpan.Zero;
