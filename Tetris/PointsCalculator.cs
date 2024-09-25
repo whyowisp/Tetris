@@ -2,13 +2,13 @@ namespace TetrisGame;
 
 static class ScoreManager
 {
-    private static int accumulatedStack = 0;
+    private static int accumulated = 0;
     public static int TotalScore { get; private set; }
     public static void CalculateTotalScore()
     {
-        if (accumulatedStack == 0) return;
+        if (accumulated == 0) return;
 
-        switch (accumulatedStack)
+        switch (accumulated)
         {
             case 1:
                 TotalScore += 40;
@@ -34,10 +34,10 @@ static class ScoreManager
 
     public static void IncrementStackTotal()
     {
-        accumulatedStack++;
+        accumulated++;
     }
     public static void ResetStackTotal()
     {
-        accumulatedStack = 0;
+        accumulated = 0;
     }
 }

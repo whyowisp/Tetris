@@ -15,7 +15,7 @@ public class Piece
         new char[][] { new char[] { '█', '█' }, new char[] { '█', '█' } }
 
     };
-
+    private string[] possibleColors = new string[] { "Red", "Green", "DarkBlue", "Yellow", "Magenta", "DarkYellow" };
     private Random random = new Random();
     public Cell[][] PieceLayout { get; private set; }
     public ConsoleColor Color { get; private set; }
@@ -89,11 +89,7 @@ public class Piece
 
     private ConsoleColor GetRandomColor()
     {
-        ConsoleColor color = ConsoleColor.Gray;
-        while (color == ConsoleColor.Gray)
-        {
-            color = (ConsoleColor)random.Next(Enum.GetValues<ConsoleColor>().Length);
-        }
-        return color;
+        Color = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), possibleColors[random.Next(possibleColors.Length)]);
+        return Color;
     }
 }

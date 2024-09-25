@@ -6,6 +6,7 @@ class Board
     private const int boardHeight = 10;
     private const int boardWidth = 12; // 10x20 + 2 for the walls
     private const int marginRight = 5; //Margin is used to prevent out of bounds exception at the right edge of the board
+    private const ConsoleColor defaultColor = ConsoleColor.Gray;
     public Cell[][] BoardLayout { get; private set; }
     public Board()
     {
@@ -58,6 +59,7 @@ class Board
     {
         char[] blockSymbol = { '█', '█' };
         char[] emptySymbol = { ' ', ' ' };
+
         for (int i = 0; i < BoardLayout.Length; i++)
         {
             for (int j = 0; j < BoardLayout[i].Length; j++)
@@ -65,11 +67,11 @@ class Board
                 // if statement: left edge || right edge || bottom edge, excluding right margin)
                 if (j == 0 || j == boardWidth - 1 || (i == boardHeight - 1 && j < boardWidth))
                 {
-                    BoardLayout[i][j] = new Cell(ConsoleColor.Gray, blockSymbol);
+                    BoardLayout[i][j] = new Cell(defaultColor, blockSymbol);
                 }
                 else
                 {
-                    BoardLayout[i][j] = new Cell(ConsoleColor.Green, emptySymbol);
+                    BoardLayout[i][j] = new Cell(defaultColor, emptySymbol);
                 }
             }
         }
