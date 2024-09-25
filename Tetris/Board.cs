@@ -22,6 +22,11 @@ class Board
         return boardWidth;
     }
 
+    public int GetHeight()
+    {
+        return boardHeight;
+    }
+
     public void MergeWithBoard(Piece piece)
     {
         for (int i = 0; i < piece.PieceLayout.Length; i++)

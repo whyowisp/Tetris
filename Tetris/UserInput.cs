@@ -5,7 +5,7 @@ namespace TetrisGame;
 class UserInput
 {
     private static ConsoleKeyInfo keyInfo;
-    public static UserAction Listen()
+    public static UserAction ListenUserAction()
     {
         if (!Console.KeyAvailable)
         {

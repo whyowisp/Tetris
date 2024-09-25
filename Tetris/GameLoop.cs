@@ -10,7 +10,7 @@ class Gameloop
     GameState gameState = GameState.Paused;
 
     // Render variables
-    private const short targetFrameRate = 10;
+    private const short targetFrameRate = 5;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
@@ -34,97 +34,89 @@ class Gameloop
 
     public void Run()
     {
-        Console.CursorVisible = false;
-        Console.Clear();
-
         gameState = GameState.Running;
 
         DateTime currentTime;
         DateTime previousTime = DateTime.Now;
         TimeSpan elapsedTime;
 
-        while (gameState != GameState.GameOver && gameState != GameState.Quit)
+        while (gameState != GameState.Quit)
         {
             currentTime = DateTime.Now;
             elapsedTime = currentTime - previousTime;
 
-            UserAction userAction = UserInput.Listen();
+            UserAction userAction = UserInput.ListenUserAction();
 
-            switch (gameState)
-            {
-                case GameState.Running:
-                    Update(userAction, elapsedTime);
-                    Render(elapsedTime);
-                    break;
-                case GameState.Collapsing:
-                    break;
-                case GameState.Quit:
-                    Console.WriteLine("Game Quit");
-                    break;
-                case GameState.GameOver:
-                    Console.WriteLine("Game Over");
-                    break;
-            }
+            if (userAction == UserAction.MoveLeft) boardController.TryMoveSideways(-1, 0);
+            if (userAction == UserAction.MoveRight) boardController.TryMoveSideways(1, 0);
+            if (userAction == UserAction.Rotate) boardController.RotatePiece();
+            if (userAction == UserAction.Drop) updateInterval = frameInterval; // Consistent for rendering
+            if (userAction == UserAction.Quit) gameState = GameState.Quit;
+            if (userAction == UserAction.Pause) gameState = GameState.Paused;
+            if (userAction == UserAction.None) updateInterval = 1000;
+
+            Update(elapsedTime);
+            Render(elapsedTime);
+
             previousTime = currentTime;
         }
     }
 
-    private void Update(UserAction userAction, TimeSpan elapsedTime)
+    private void Update(TimeSpan elapsedTime)
     {
         timeElapsedForDrop += elapsedTime;
 
-        if (boardController.Piece == null)
-        {
-            int spawnX = boardController.GameBoard.GetWidth() / 2 - 1;
-            boardController.SpawnPiece(spawnX, 0);
-        }
-
-        switch (userAction)
-        {
-            case UserAction.Quit:
-                gameState = GameState.Quit;
-                break;
-            case UserAction.Pause:
-                Console.WriteLine("Game Paused");
-                Console.ReadKey();
-                break;
-            case UserAction.Rotate:
-                boardController.RotatePiece();
-                break;
-            case UserAction.Drop:
-                updateInterval = frameInterval; // Consistent rendering, drop speed could be super fast.
-                break;
-            case UserAction.MoveLeft:
-                boardController.TryMoveSideways(-1, 0);
-                break;
-            case UserAction.MoveRight:
-                boardController.TryMoveSideways(1, 0);
-                break;
-            case UserAction.None:
-                updateInterval = 1000;
-                break;
-            default:
-                break;
-        }
-
         if (timeElapsedForDrop.TotalMilliseconds >= updateInterval)
         {
-            boardController.TryMoveDown(0, 1);
-            if (boardController.IsGameOver)
+            // Check if there are any full rows to collapse -> set GameState to Collapsing.
+            if (boardController.isAnyRowsFull())
             {
-                gameState = GameState.GameOver;
-                return;
-            }
-            short rowsCleared = boardController.CollapseRows();
-            PointsCalculator.CalculatePoints(rowsCleared);
-            if (rowsCleared > 0)
-            {
-                Console.Title = $"Tetris - Points: {PointsCalculator.TotalPoints}";
+                gameState = GameState.Collapsing;
             }
 
+            switch (gameState)
+            {
+                case GameState.Running:
+                    // Create new piece if there is no piece on the board.
+                    if (boardController.Piece == null)
+                    {
+                        int spawnX = boardController.GameBoard.GetWidth() / 2 - 1;
+                        boardController.SpawnPiece(spawnX, 0);
+                    }
+
+                    // Try to move the piece down.
+                    boardController.TryMoveDown(0, 1);
+
+                    // Check game over
+                    if (boardController.IsGameOver)
+                    {
+                        gameState = GameState.GameOver;
+                    }
+                    break;
+                case GameState.Collapsing:
+                    // Collapse rows one per update cycle.
+                    gameState = GameState.Running;
+                    // Add to total rows collapsed.
+                    break;
+                case GameState.Paused:
+                    Console.WriteLine("Game Paused");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                    gameState = GameState.Running;
+                    break;
+                case GameState.Quit:
+                    Console.WriteLine("Good bye!");
+                    break;
+                case GameState.GameOver:
+                    Console.WriteLine("Game Over");
+                    Thread.Sleep(2000);
+                    gameState = GameState.Quit;
+                    break;
+            }
             timeElapsedForDrop = TimeSpan.Zero;
         }
     }
+
 
     private void Render(TimeSpan elapsedTime)
     {
@@ -135,6 +127,8 @@ class Gameloop
             //Console.Clear(); // For performance, clearing is done in update method.
             Console.SetCursorPosition(0, 0);
             boardController.Render();
+            Console.SetCursorPosition(boardController.GameBoard.GetWidth() * 3, 5);
+            Console.WriteLine("gameState: " + gameState);
             timeElapsedForRender = TimeSpan.Zero;
         }
     }

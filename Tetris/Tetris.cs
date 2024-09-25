@@ -27,9 +27,9 @@ public enum Color
 
 enum GameState
 {
+    Paused,
     Running,
     Collapsing,
-    Paused,
     Quit,
     GameOver
 }
@@ -51,6 +51,7 @@ class Tetris
     {
         Console.Title = "Tetris - Points: 0";
         Console.CursorVisible = false;
+        Console.Clear();
 
         var entryScreen = new EntryScreen();
         entryScreen.Show();

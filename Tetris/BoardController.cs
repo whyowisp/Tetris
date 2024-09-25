@@ -6,6 +6,7 @@ namespace TetrisGame;
 class BoardController
 {
     private bool pieceCreatedInThisRound = false;
+    private int lastFullRow = 0;
     public bool IsGameOver { get; private set; } = false;
     public Board GameBoard { get; set; }
     public Piece? Piece { get; private set; }
@@ -24,7 +25,7 @@ class BoardController
     }
 
     // There is a bug with this method. Can you find it?
-    // Just kidding. The rotation against the wall causes piece to merge into it.
+    // Just kidding - the rotation against the wall causes piece to merge into it.
     // Besides, I'm not even sure that if rotating should cause merging.
     public void RotatePiece()
     {
@@ -67,36 +68,21 @@ class BoardController
         Piece?.ChangePosition(nextX, nextY);
         pieceCreatedInThisRound = false;
     }
-
-    public short CollapseRows()
+    public bool isAnyRowsFull()
     {
-        short rowsCleared = 0;
+        lastFullRow = FindLastFullRow();
+        return lastFullRow != 0;
+    }
 
-        for (int i = GameBoard.BoardLayout.Length - 2; i >= 0; i--)
+    public void ClearLastFullRow()
+    {
+        for (int i = lastFullRow; i > 0; i--)
         {
-            bool isRowFull = true;
             for (int j = 1; j < GameBoard.GetWidth() - 1; j++)
             {
-                if (GameBoard.BoardLayout[i][j].Symbol[0] == ' ')
-                {
-                    isRowFull = false;
-                    break;
-                }
-            }
-
-            if (isRowFull)
-            {
-                rowsCleared++;
-                for (int k = i; k >= 1; k--)
-                {
-                    for (int l = 1; l < GameBoard.BoardLayout[k].Length - 1; l++)
-                    {
-                        GameBoard.BoardLayout[k][l] = GameBoard.BoardLayout[k - 1][l];
-                    }
-                }
+                GameBoard.BoardLayout[i][j] = GameBoard.BoardLayout[i - 1][j];
             }
         }
-        return rowsCleared;
     }
 
     public void Render()
@@ -118,13 +104,33 @@ class BoardController
                 {
                     if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j].Symbol[0] == '█')
                     {
-                        Console.WriteLine("Collision detected");
                         return true;
                     }
                 }
             }
         }
         return false;
+    }
+
+    private int FindLastFullRow()
+    {
+        for (int i = GameBoard.GetHeight() - 2; i > 0; i--)
+        {
+            bool isFull = true;
+            for (int j = 1; j < GameBoard.GetWidth() - 1; j++)
+            {
+                if (GameBoard.BoardLayout[i][j].Symbol[0] != '█')
+                {
+                    isFull = false;
+                    break;
+                }
+            }
+            if (isFull)
+            {
+                return i;
+            }
+        }
+        return 0;
     }
     private void EvaluateGameOver(bool collision, bool pieceCreatedInThisRound)
     {
