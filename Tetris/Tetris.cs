@@ -49,7 +49,7 @@ class Tetris
 {
     public static void Start()
     {
-        Console.Title = "Tetris - Points: 0";
+        Console.Title = "Tetris";
         Console.CursorVisible = false;
         Console.Clear();
 

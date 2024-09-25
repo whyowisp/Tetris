@@ -1,30 +1,43 @@
 namespace TetrisGame;
 
-static class PointsCalculator
+static class ScoreManager
 {
-    public static int CurrentPoints { get; private set; }
-    public static int TotalPoints { get; private set; }
-    public static void CalculatePoints(int linesCleared)
+    private static int accumulatedStack = 0;
+    public static int TotalScore { get; private set; }
+    public static void CalculateTotalScore()
     {
-        switch (linesCleared)
+        if (accumulatedStack == 0) return;
+
+        switch (accumulatedStack)
         {
             case 1:
-                CurrentPoints = 40;
+                TotalScore += 40;
                 break;
             case 2:
-                CurrentPoints = 100;
+                TotalScore += 100;
                 break;
             case 3:
-                CurrentPoints = 300;
+                TotalScore += 300;
                 break;
             case 4:
-                CurrentPoints = 1200;
+                TotalScore += 1200;
                 break;
             default:
-                CurrentPoints = 0;
                 break;
         }
-        TotalPoints += CurrentPoints;
+    }
 
+    public static int GetTotalScore()
+    {
+        return TotalScore;
+    }
+
+    public static void IncrementStackTotal()
+    {
+        accumulatedStack++;
+    }
+    public static void ResetStackTotal()
+    {
+        accumulatedStack = 0;
     }
 }

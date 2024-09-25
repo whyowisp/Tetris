@@ -68,11 +68,12 @@ class Gameloop
 
         if (timeElapsedForDrop.TotalMilliseconds >= updateInterval)
         {
-            // Check if there are any full rows to collapse -> set GameState to Collapsing.
+            // Check if there are any full rows to collapse
             if (boardController.isAnyRowsFull())
             {
                 gameState = GameState.Collapsing;
             }
+
 
             switch (gameState)
             {
@@ -82,6 +83,10 @@ class Gameloop
                     {
                         int spawnX = boardController.GameBoard.GetWidth() / 2 - 1;
                         boardController.SpawnPiece(spawnX, 0);
+
+                        // This is a good place to calculate points
+                        ScoreManager.CalculateTotalScore();
+                        ScoreManager.ResetStackTotal();
                     }
 
                     // Try to move the piece down.
@@ -94,9 +99,9 @@ class Gameloop
                     }
                     break;
                 case GameState.Collapsing:
-                    // Collapse rows one per update cycle.
+                    ScoreManager.IncrementStackTotal();
+                    boardController.ClearLastFullRow();
                     gameState = GameState.Running;
-                    // Add to total rows collapsed.
                     break;
                 case GameState.Paused:
                     Console.WriteLine("Game Paused");
@@ -127,8 +132,7 @@ class Gameloop
             //Console.Clear(); // For performance, clearing is done in update method.
             Console.SetCursorPosition(0, 0);
             boardController.Render();
-            Console.SetCursorPosition(boardController.GameBoard.GetWidth() * 3, 5);
-            Console.WriteLine("gameState: " + gameState);
+
             timeElapsedForRender = TimeSpan.Zero;
         }
     }

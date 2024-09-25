@@ -91,6 +91,7 @@ class BoardController
         // Down side being that when block is close to other occupied space, the empty spaces from
         // the block will temprorarily overwrite the occupied spaces.
         GameBoard.Render();
+        Console.WriteLine($"Tetris - Score: {ScoreManager.GetTotalScore()}");
         Piece?.Render();
     }
 
