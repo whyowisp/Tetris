@@ -7,7 +7,7 @@ class Gameloop
     GameState gameState = GameState.Paused;
 
     // Render variables
-    private const short targetFrameRate = 5;
+    private const short targetFrameRate = 15;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 

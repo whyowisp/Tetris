@@ -77,12 +77,13 @@ public class Piece
                 // This is a hacky way of saying i live in different coordinate system.
                 // Basically the cursor must be moved right by symbol.Length to make it look like a square.
                 // Remind you that symbol is char[] = { '█', '█' }
-                Console.SetCursorPosition((PosX + j) * 2, PosY + i);
-                Console.Write(PieceLayout[i][j].Symbol);
+                if (PieceLayout[i][j].Symbol[0] != ' ')
+                {
+                    Console.SetCursorPosition((PosX + j) * 2, PosY + i);
+                    Console.Write(PieceLayout[i][j].Symbol);
+                }
             }
-            Console.WriteLine();
         }
-        Console.ResetColor();
     }
 
     private ConsoleColor GetRandomColor()

@@ -44,11 +44,17 @@ class Board
     }
     public void Render()
     {
+        ConsoleColor previousColor = Console.ForegroundColor;
         for (int i = 0; i < BoardLayout.Length; i++)
         {
             for (int j = 0; j < BoardLayout[i].Length; j++)
             {
-                Console.ForegroundColor = BoardLayout[i][j].Color;
+                //Change color only when it's different from the previous cell
+                if (BoardLayout[i][j].Color != previousColor)
+                {
+                    Console.ForegroundColor = BoardLayout[i][j].Color; //This operation is slow, so we only do it when necessary
+                    previousColor = BoardLayout[i][j].Color;
+                }
                 Console.Write(BoardLayout[i][j].Symbol);
             }
             Console.WriteLine();
