@@ -28,12 +28,11 @@ class BoardController
     {
         if (Piece == null) return;
 
-        bool collision = CheckCollision(0, 0);
-        if (collision)
+        int pieceRightEdgePosAfterRotation = Piece.PosX + Piece.PieceLayout.Length - 1;
+        int exceedingWidth = pieceRightEdgePosAfterRotation - (GameBoard.GetWidth() - 2);
+        if (exceedingWidth > 0)
         {
-            GameBoard.MergeWithBoard(Piece);
-            Piece = null;
-            return;
+            Piece.ChangePosition(-exceedingWidth, 0);
         }
         Piece?.Rotate();
     }

@@ -82,7 +82,7 @@ class Gameloop
 
                         // This is a good place to calculate points
                         ScoreManager.CalculateTotalScore();
-                        ScoreManager.ResetStackTotal();
+                        ScoreManager.ResetAccumulated();
                     }
 
                     // Try to move the piece down.
@@ -95,7 +95,7 @@ class Gameloop
                     }
                     break;
                 case GameState.Collapsing:
-                    ScoreManager.IncrementStackTotal();
+                    ScoreManager.Accumulate();
                     boardController.ClearLastFullRow();
                     gameState = GameState.Running;
                     break;

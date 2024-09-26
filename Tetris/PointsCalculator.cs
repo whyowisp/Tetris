@@ -32,11 +32,11 @@ static class ScoreManager
         return TotalScore;
     }
 
-    public static void IncrementStackTotal()
+    public static void Accumulate()
     {
         accumulated++;
     }
-    public static void ResetStackTotal()
+    public static void ResetAccumulated()
     {
         accumulated = 0;
     }
