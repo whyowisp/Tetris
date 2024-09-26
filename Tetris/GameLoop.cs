@@ -126,7 +126,16 @@ class Gameloop
         if (timeElapsedForRender.TotalMilliseconds >= frameInterval)
         {
             boardController.Render();
-
+            //Draw next piece
+            for (int i = 0; i < boardController.NextPiece.PieceLayout.Length; i++)
+            {
+                for (int j = 0; j < boardController.NextPiece.PieceLayout[i].Length; j++)
+                {
+                    Console.SetCursorPosition(boardController.GameBoard.GetWidth() + 5 + j, 5 + i);
+                    Console.ForegroundColor = boardController.NextPiece.PieceLayout[i][j].Color;
+                    Console.Write(boardController.NextPiece.PieceLayout[i][j].Symbol);
+                }
+            }
             timeElapsedForRender = TimeSpan.Zero;
         }
     }

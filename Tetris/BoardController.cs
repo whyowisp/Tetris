@@ -7,23 +7,26 @@ class BoardController
     public bool IsGameOver { get; private set; } = false;
     public Board GameBoard { get; set; }
     public Piece? Piece { get; private set; }
+    public Piece? NextPiece { get; private set; }
     public BoardController()
     {
         GameBoard = new Board();
+        NextPiece = new Piece(0, 0);
     }
 
     public void SpawnPiece(int x, int y)
     {
         if (Piece == null)
         {
-            Piece = new Piece(x, y);
+            Piece = NextPiece;
+            NextPiece = new Piece(0, 0);
+            if (Piece != null)
+            {
+                Piece.ChangePosition(x, y);
+            }
             pieceCreatedInThisRound = true;
         }
     }
-
-    // There is a bug with this method. Can you find it?
-    // Just kidding - the rotation against the wall causes piece to merge into it.
-    // Besides, I'm not even sure that if rotating should cause merging.
     public void RotatePiece()
     {
         if (Piece == null) return;
