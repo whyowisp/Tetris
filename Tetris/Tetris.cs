@@ -35,9 +35,8 @@ class Tetris
 {
     public static void Start()
     {
-        Console.Title = "Tetris";
+        Console.Title = "Tetris - @MekanikaGames";
         Console.CursorVisible = false;
-        Console.Clear();
 
         Gameloop.Instance.Run();
     }

@@ -3,6 +3,7 @@ namespace TetrisGame;
 class Gameloop
 {
     private static Gameloop? instance;
+    private UserInterface userInterface = new UserInterface();
     private BoardController boardController = new BoardController();
     GameState gameState = GameState.Paused;
 
@@ -31,6 +32,11 @@ class Gameloop
 
     public void Run()
     {
+        userInterface.SetStartingPosition(boardController.GameBoard.GetWidth() * 2);
+        if (boardController.NextPiece != null)
+        {
+            userInterface.InitialRender(boardController.NextPiece);
+        }
         gameState = GameState.Running;
 
         DateTime currentTime;
@@ -83,6 +89,10 @@ class Gameloop
                         // This is a good place to calculate points
                         ScoreManager.CalculateTotalScore();
                         ScoreManager.ResetAccumulated();
+                        if (boardController.NextPiece != null)
+                        {
+                            userInterface.Render(boardController.NextPiece, ScoreManager.GetTotalScore());
+                        }
                     }
 
                     // Try to move the piece down.
@@ -100,17 +110,16 @@ class Gameloop
                     gameState = GameState.Running;
                     break;
                 case GameState.Paused:
-                    Console.WriteLine("Game Paused");
-                    Console.WriteLine("Press any key to continue...");
+                    userInterface.DrawGameStatus("Game Paused");
                     Console.ReadKey();
+                    userInterface.DrawGameStatus("");
                     gameState = GameState.Running;
                     break;
                 case GameState.Quit:
-                    Console.WriteLine("Good bye!");
+                    userInterface.DrawGameStatus("Game Quit");
                     break;
                 case GameState.GameOver:
-                    Console.WriteLine("Game Over");
-                    Console.WriteLine($"Total score: {ScoreManager.GetTotalScore()}");
+                    userInterface.DrawGameStatus("Game Over!");
                     Console.ReadKey();
                     gameState = GameState.Quit;
                     break;
@@ -126,16 +135,6 @@ class Gameloop
         if (timeElapsedForRender.TotalMilliseconds >= frameInterval)
         {
             boardController.Render();
-            //Draw next piece
-            for (int i = 0; i < boardController.NextPiece.PieceLayout.Length; i++)
-            {
-                for (int j = 0; j < boardController.NextPiece.PieceLayout[i].Length; j++)
-                {
-                    Console.SetCursorPosition(boardController.GameBoard.GetWidth() + 5 + j, 5 + i);
-                    Console.ForegroundColor = boardController.NextPiece.PieceLayout[i][j].Color;
-                    Console.Write(boardController.NextPiece.PieceLayout[i][j].Symbol);
-                }
-            }
             timeElapsedForRender = TimeSpan.Zero;
         }
     }

@@ -1,4 +1,4 @@
 ﻿using TetrisGame;
 
-//Console.WindowWidth = 24;
+Console.Clear();
 Tetris.Start();

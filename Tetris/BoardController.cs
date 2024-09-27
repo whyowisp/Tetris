@@ -92,7 +92,6 @@ class BoardController
 
         Console.SetCursorPosition(0, 0);
         GameBoard.Render();
-        Console.WriteLine($"Tetris - Score: {ScoreManager.GetTotalScore()}");
         Piece?.Render();
     }
 
