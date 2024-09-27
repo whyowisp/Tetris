@@ -126,28 +126,30 @@ class UserInterface
         Console.Write("Total Score: " + score);
     }
 
-    public void Render(Piece piece, int score)
+    public void DrawGameLevel(int level)
     {
-        DrawBackground();
-        DrawTetrisTitle();
-        DrawPieceBackGround();
-        DrawNextPiece(piece);
-        DrawCurrentScore(score);
-    }
+        int leftMargin = backGround[0].Length / 2 - 8;
+        int topMargin = 16;
 
-    public void InitialRender(Piece piece)
+        Console.BackgroundColor = backGroundColor;
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.SetCursorPosition(UIPosX + leftMargin, topMargin);
+        Console.Write("Level: " + level);
+    }
+    public void InitialRender()
     {
         DrawBackground();
         DrawTetrisTitle();
         DrawPieceBackGround();
-        DrawNextPiece(piece);
         DrawCurrentScore(0);
+        DrawGameLevel(1);
     }
 
-    public void Refresh(Piece piece, int score)
+    public void Refresh(Piece piece, int score, short level)
     {
         DrawPieceBackGround();
         DrawNextPiece(piece);
         DrawCurrentScore(score);
+        DrawGameLevel(level);
     }
 }

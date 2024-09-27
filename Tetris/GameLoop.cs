@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace TetrisGame;
 
 class Gameloop
@@ -7,13 +9,19 @@ class Gameloop
     private BoardController boardController = new BoardController();
     GameState gameState = GameState.Paused;
 
-    // Render variables
+
+    private const short maxLevel = 29;
+    private short level = 1;
+    private short rowsCleared = 0;
+
+    // Render loop variables
     private const short targetFrameRate = 15;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
-    // Update-variables
-    private short updateInterval = 1000;
+    // Update loop variables
+    private short currentUpdateInterval = 1000; // varies when user drops the piece
+    private short targetUpdateInterval = 1000; // The "real" update interval, decreases with level
     private TimeSpan timeElapsedForDrop;
 
     private Gameloop() { }
@@ -33,10 +41,7 @@ class Gameloop
     public void Run()
     {
         userInterface.SetStartingPosition(boardController.GameBoard.GetWidth() * 2);
-        if (boardController.NextPiece != null)
-        {
-            userInterface.InitialRender(boardController.NextPiece);
-        }
+        userInterface.InitialRender();
         gameState = GameState.Running;
 
         DateTime currentTime;
@@ -53,10 +58,10 @@ class Gameloop
             if (userAction == UserAction.MoveLeft) boardController.TryMoveSideways(-1, 0);
             if (userAction == UserAction.MoveRight) boardController.TryMoveSideways(1, 0);
             if (userAction == UserAction.Rotate) boardController.RotatePiece();
-            if (userAction == UserAction.Drop) updateInterval = frameInterval; // Consistent for rendering
+            if (userAction == UserAction.Drop) currentUpdateInterval = frameInterval; // Consistent for rendering
             if (userAction == UserAction.Quit) gameState = GameState.Quit;
             if (userAction == UserAction.Pause) gameState = GameState.Paused;
-            if (userAction == UserAction.None) updateInterval = 1000;
+            if (userAction == UserAction.None) currentUpdateInterval = targetUpdateInterval;
 
             Update(elapsedTime);
             Render(elapsedTime);
@@ -69,7 +74,7 @@ class Gameloop
     {
         timeElapsedForDrop += elapsedTime;
 
-        if (timeElapsedForDrop.TotalMilliseconds >= updateInterval)
+        if (timeElapsedForDrop.TotalMilliseconds >= currentUpdateInterval)
         {
             // Check if there are any full rows to collapse
             if (boardController.isAnyRowsFull())
@@ -80,19 +85,19 @@ class Gameloop
             switch (gameState)
             {
                 case GameState.Running:
+                    if (boardController.NextPiece != null)
+                    {
+                        userInterface.Refresh(boardController.NextPiece, ScoreManager.GetTotalScore(), level);
+                    }
                     // Create new piece if there is no piece on the board.
                     if (boardController.Piece == null)
                     {
                         int spawnX = boardController.GameBoard.GetWidth() / 2 - 1;
                         boardController.SpawnPiece(spawnX, 0);
 
-                        // This is a good place to calculate points
+                        // While last piece is being merged (=null), calculate score
                         ScoreManager.CalculateTotalScore();
                         ScoreManager.ResetAccumulated();
-                        if (boardController.NextPiece != null)
-                        {
-                            userInterface.Render(boardController.NextPiece, ScoreManager.GetTotalScore());
-                        }
                     }
 
                     // Try to move the piece down.
@@ -107,6 +112,14 @@ class Gameloop
                 case GameState.Collapsing:
                     ScoreManager.Accumulate();
                     boardController.ClearLastFullRow();
+
+                    // Resolve update interval
+                    rowsCleared++;
+                    targetUpdateInterval = CalculateUpdateInterval(level);
+                    if (rowsCleared >= level * 10 && level < maxLevel)
+                    {
+                        level++; // max *will* be 29
+                    }
                     gameState = GameState.Running;
                     break;
                 case GameState.Paused:
@@ -137,5 +150,11 @@ class Gameloop
             boardController.Render();
             timeElapsedForRender = TimeSpan.Zero;
         }
+    }
+
+    private short CalculateUpdateInterval(int level)
+    {
+        // Decrease the interval by 10% for each level
+        return (short)(targetUpdateInterval * Math.Pow(0.9, level - 1));
     }
 }
