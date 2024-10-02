@@ -39,19 +39,7 @@ class BoardController
         {
             Piece.Rotate();
         }
-        /* 
-        
-        Original right edge check, not needed anymore
-
-        // Move piece to the left if it's going to exceed the right edge after rotation
-        int pieceRightEdgePosAfterRotation = Piece.PosX + Piece.PieceLayout.Length - 1;
-        int exceedingWidth = pieceRightEdgePosAfterRotation - (GameBoard.GetWidth() - 2);
-        if (exceedingWidth > 0)
-        {
-            Piece.ChangePosition(-exceedingWidth, 0);
-        }
-
-        Piece?.Rotate();*/
+        // In c++ we would delete the referencePiece here, but the C# GC is optimized for this kind of situation  
     }
 
     public void TryMoveSideways(int nextX, int nextY)

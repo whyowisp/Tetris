@@ -94,6 +94,8 @@ public class Piece
         }
     }
 
+    ~Piece() { }
+
     private ConsoleColor GetRandomColor()
     {
         Color = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), possibleColors[random.Next(possibleColors.Length)]);

@@ -117,10 +117,6 @@ class Gameloop
                     {
                         level++; // max *will* be 29
                         targetUpdateInterval = CalculateUpdateInterval(level);
-                        Console.WriteLine($"targetUpdateInterval: {targetUpdateInterval}");
-#if WINDOWS
-                        Console.Beep(500, 100);
-#endif
                     }
 
                     gameState = GameState.Running;
