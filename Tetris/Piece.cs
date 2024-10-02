@@ -28,6 +28,14 @@ public class Piece
         PosY = y;
     }
 
+    public Piece(Piece originalPiece)
+    {
+        PieceLayout = originalPiece.PieceLayout;
+        Color = originalPiece.Color;
+        PosX = originalPiece.PosX;
+        PosY = originalPiece.PosY;
+    }
+
     private Cell[][] AssignShapeToPieceLayout(char[][] shapeSelected)
     {
         Cell[][] pieceLayout = new Cell[shapeSelected.Length][];

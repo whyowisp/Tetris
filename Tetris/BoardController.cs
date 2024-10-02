@@ -27,24 +27,38 @@ class BoardController
             pieceCreatedInThisRound = true;
         }
     }
-    public void RotatePiece()
+    public void TryRotate()
     {
         if (Piece == null) return;
 
+        // If piece would collide to other pieces or walls after rotation, don't rotate
+        Piece referencePiece = new Piece(Piece);
+        referencePiece.Rotate();
+        bool collision = CheckRotationalCollision(ref referencePiece);
+        if (!collision)
+        {
+            Piece.Rotate();
+        }
+        /* 
+        
+        Original right edge check, not needed anymore
+
+        // Move piece to the left if it's going to exceed the right edge after rotation
         int pieceRightEdgePosAfterRotation = Piece.PosX + Piece.PieceLayout.Length - 1;
         int exceedingWidth = pieceRightEdgePosAfterRotation - (GameBoard.GetWidth() - 2);
         if (exceedingWidth > 0)
         {
             Piece.ChangePosition(-exceedingWidth, 0);
         }
-        Piece?.Rotate();
+
+        Piece?.Rotate();*/
     }
 
     public void TryMoveSideways(int nextX, int nextY)
     {
         if (Piece == null) return;
 
-        bool collision = CheckCollision(nextX, nextY);
+        bool collision = CheckTranslationalCollision(nextX, nextY);
         if (!collision)
         {
             Piece?.ChangePosition(nextX, nextY);
@@ -55,7 +69,7 @@ class BoardController
     {
         if (Piece == null) return;
 
-        bool collision = CheckCollision(nextX, nextY);
+        bool collision = CheckTranslationalCollision(nextX, nextY);
         EvaluateGameOver(collision, pieceCreatedInThisRound);
 
         if (collision && nextY != 0) //It's the bottom edge OR collision with another piece
@@ -95,7 +109,7 @@ class BoardController
         Piece?.Render();
     }
 
-    private bool CheckCollision(int nextX, int nextY)
+    private bool CheckTranslationalCollision(int nextX, int nextY)
     {
         for (int i = 0; i < Piece!.PieceLayout.Length; i++)
         {
@@ -104,6 +118,23 @@ class BoardController
                 if (Piece!.PieceLayout[i][j].Symbol[0] == '█')
                 {
                     if (GameBoard.BoardLayout[Piece!.PosY + nextY + i][Piece!.PosX + nextX + j].Symbol[0] == '█')
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private bool CheckRotationalCollision(ref Piece referencePiece)
+    {
+        for (int i = 0; i < referencePiece.PieceLayout.Length; i++)
+        {
+            for (int j = 0; j < referencePiece.PieceLayout[i].Length; j++)
+            {
+                if (referencePiece.PieceLayout[i][j].Symbol[0] == '█')
+                {
+                    if (GameBoard.BoardLayout[referencePiece.PosY + i][referencePiece.PosX + j].Symbol[0] == '█')
                     {
                         return true;
                     }
