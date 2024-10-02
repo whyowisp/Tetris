@@ -2,4 +2,4 @@
 
 ## images
 
-![image](gamePlay.png)
+![image](https://raw.githubusercontent.com/whyowisp/tetris/main/gamePlay.png)
