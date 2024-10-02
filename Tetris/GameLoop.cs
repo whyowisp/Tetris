@@ -111,15 +111,20 @@ class Gameloop
                     break;
                 case GameState.Collapsing:
                     ScoreManager.Accumulate();
-                    boardController.ClearLastFullRow();
+                    boardController.ClearLowestFullRow();
 
                     // Resolve update interval
                     rowsCleared++;
-                    targetUpdateInterval = CalculateUpdateInterval(level);
-                    if (rowsCleared >= level * 10 && level < maxLevel)
+                    if (rowsCleared >= level * 10 && level < maxLevel)  // Fore every 10 rows cleared, increase level by 1
                     {
                         level++; // max *will* be 29
+                        targetUpdateInterval = CalculateUpdateInterval(level);
+                        Console.WriteLine($"targetUpdateInterval: {targetUpdateInterval}");
+#if WINDOWS
+                        Console.Beep(500, 100);
+#endif
                     }
+
                     gameState = GameState.Running;
                     break;
                 case GameState.Paused:

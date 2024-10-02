@@ -73,7 +73,7 @@ class BoardController
         return lastFullRow != 0;
     }
 
-    public void ClearLastFullRow()
+    public void ClearLowestFullRow()
     {
         for (int i = lastFullRow; i > 0; i--)
         {
