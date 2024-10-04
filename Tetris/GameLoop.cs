@@ -135,6 +135,7 @@ class Gameloop
                     break;
                 case GameState.GameOver:
                     userInterface.DrawGameStatus("Game Over!");
+                    Thread.Sleep(5000); // Some delay so user has time to see his score
                     Console.ReadKey();
                     gameState = GameState.Quit;
                     break;
