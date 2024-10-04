@@ -53,10 +53,13 @@ class Gameloop
 
             UserAction userAction = UserInput.ListenUserAction();
 
-            if (userAction == UserAction.MoveLeft) boardController.TryMoveSideways(-1, 0);
-            if (userAction == UserAction.MoveRight) boardController.TryMoveSideways(1, 0);
-            if (userAction == UserAction.Rotate) boardController.TryRotate();
-            if (userAction == UserAction.Drop) currentUpdateInterval = frameInterval; // Consistent for rendering
+            if (gameState != GameState.Collapsing && boardController.Piece != null)
+            {
+                if (userAction == UserAction.MoveLeft) boardController.TryMoveSideways(-1, 0);
+                if (userAction == UserAction.MoveRight) boardController.TryMoveSideways(1, 0);
+                if (userAction == UserAction.Rotate) boardController.TryRotate();
+                if (userAction == UserAction.Drop) currentUpdateInterval = frameInterval; // Consistent for rendering
+            }
             if (userAction == UserAction.Quit) gameState = GameState.Quit;
             if (userAction == UserAction.Pause) gameState = GameState.Paused;
             if (userAction == UserAction.None) currentUpdateInterval = targetUpdateInterval;
