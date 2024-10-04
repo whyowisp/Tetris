@@ -39,5 +39,7 @@ class Tetris
         Console.CursorVisible = false;
 
         Gameloop.Instance.Run();
+
+        Console.ResetColor();
     }
 }
