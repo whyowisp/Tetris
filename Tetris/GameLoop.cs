@@ -13,7 +13,7 @@ class Gameloop
     private short rowsCleared = 0;
 
     // Render loop variables
-    private const short targetFrameRate = 15;
+    private const short targetFrameRate = 10;
     private const short frameInterval = 1000 / targetFrameRate;
     private TimeSpan timeElapsedForRender;
 
